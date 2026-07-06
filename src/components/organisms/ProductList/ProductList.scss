@@ -1,0 +1,11 @@
+@use '../../../styles/utils/mixins';
+
+.product-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px 16px;
+
+  @include mixins.on-tablet {
+    grid-template-columns: repeat(auto-fill, minmax(242px, 1fr));
+  }
+}

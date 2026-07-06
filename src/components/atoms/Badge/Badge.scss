@@ -1,0 +1,42 @@
+@use '../../../styles/utils/variables' as var;
+
+.badge {
+  position: relative;
+  display: inline-flex;
+}
+
+.badge__counter {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  width: auto;
+  min-width: 14px;
+  height: 14px;
+  padding-inline: 2px;
+  border: 1px solid var.$color-white;
+  border-radius: 14px;
+  font-family: Mont-SemiBold, Arial, Helvetica, sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  color: #fff;
+  background-color: var.$color-red;
+  animation: counter-pop var.$transition-default ease-in-out;
+}
+
+@keyframes counter-pop {
+  0% {
+    transform: translate(50%, -50%) scale(0.75);
+  }
+
+  50% {
+    transform: translate(50%, -50%) scale(1.25);
+  }
+
+  100% {
+    transform: translate(50%, -50%) scale(1);
+  }
+}

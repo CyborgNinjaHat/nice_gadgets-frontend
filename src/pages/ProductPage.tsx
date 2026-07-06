@@ -1,0 +1,65 @@
+import { useEffect, type FC } from 'react';
+import { useProductDetails } from '../hooks/useProductDetails';
+import { useProducts } from '../hooks/useProducts';
+import { ProductLayout } from '../layouts/ProductLayout/ProductLayout';
+import { ProductGallery } from '../components/organisms/ProductGallery/ProductGallery';
+import { ProductMainInfo } from '../components/organisms/ProductMainInfo/ProductMainInfo';
+import { ProductAbout } from '../components/organisms/ProductAbout/ProductAbout';
+import { ProductTechSpecs } from '../components/organisms/ProductTechSpecs/ProductTechSpecs';
+import { ProductSlider } from '../components/organisms/ProductSlider/ProductSlider';
+import { ProductDetailsSkeleton } from '../components/organisms/ProductDetailsSkeleton/ProductDetailsSkeleton';
+import { Breadcrumbs } from '../components/molecules/Breadcrumbs/Breadcrumbs';
+import { ErrorState } from '../components/molecules/ErrorState/ErrorState';
+import { notify } from '../utils/notify';
+import { getRecommendedProducts } from '../utils/productCollections';
+import { NotFoundPage } from './NotFoundPage';
+
+export const ProductPage: FC = () => {
+  const { productDetails, product, productSpecs, errorMessage, isLoading } = useProductDetails();
+  const {
+    products,
+    errorMessage: productsErrorMessage,
+    isLoading: isProductsLoading,
+  } = useProducts();
+
+  useEffect(() => {
+    if (!product) return;
+    document.title = product.name;
+  }, [product]);
+
+  useEffect(() => {
+    if (errorMessage) notify.error(errorMessage);
+  }, [errorMessage]);
+
+  const recommendedProducts = getRecommendedProducts(products, product);
+
+  if (isLoading && !productDetails) {
+    return <ProductDetailsSkeleton />;
+  }
+
+  if (errorMessage || productsErrorMessage) {
+    return <ErrorState />;
+  }
+
+  if (!productDetails || !product) {
+    return <NotFoundPage variant="product" />;
+  }
+
+  return (
+    <ProductLayout
+      breadcrumbs={<Breadcrumbs item={product.name} />}
+      title={productDetails.name}
+      gallery={<ProductGallery images={productDetails.images} alt={productDetails.name} />}
+      info={<ProductMainInfo productDetails={productDetails} product={product} />}
+      about={<ProductAbout description={productDetails.description} />}
+      specs={<ProductTechSpecs specs={productSpecs} />}
+      recommended={
+        <ProductSlider
+          title="You may also like"
+          products={recommendedProducts}
+          isLoading={isProductsLoading}
+        />
+      }
+    />
+  );
+};
