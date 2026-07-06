@@ -1,0 +1,210 @@
+@use '../../../styles/utils/variables' as var;
+@use '../../../styles/utils/mixins';
+@use '../../../styles/utils/typography';
+
+.header {
+  position: fixed;
+  z-index: 100;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  height: var.$header-height-mobile-or-tablet;
+  padding: 0;
+  background-color: var.$color-white;
+  box-shadow: 0 1px 0 0 var.$color-elements;
+
+  @include mixins.on-desktop {
+    height: var.$header-height-desktop;
+  }
+
+  &__logo {
+    margin: 13px 16px;
+
+    @include mixins.on-desktop {
+      margin: 18px 24px;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    min-width: 0;
+  }
+
+  &__nav-list {
+    display: none;
+    align-items: center;
+    list-style: none;
+
+    @include mixins.on-tablet {
+      display: flex;
+      gap: 28px;
+    }
+
+    @include mixins.on-desktop {
+      gap: 64px;
+    }
+  }
+
+  &__nav-link {
+    @extend %uppercase;
+
+    position: relative;
+    display: flex;
+    line-height: 48px;
+    color: var.$color-secondary;
+    transition: color var.$transition-default;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      transform-origin: center;
+      transform: scaleX(0);
+      display: block;
+      width: 100%;
+      height: 3px;
+      background-color: var.$color-primary;
+      transition: transform var.$transition-default ease-in-out;
+    }
+
+    &:hover {
+      color: var.$color-primary;
+    }
+
+    &--active::after {
+      transform: scaleX(1);
+    }
+
+    &--active {
+      color: var.$color-primary;
+    }
+
+    @include mixins.on-desktop {
+      line-height: 64px;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    margin-left: auto;
+  }
+
+  &__actions-list {
+    display: flex;
+    align-items: center;
+    list-style: none;
+  }
+
+  &__actions-item {
+    display: flex;
+    align-items: center;
+  }
+
+  &__actions-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 16px;
+    box-shadow: -1px 0 0 0 var.$color-elements;
+    transition: background-color var.$transition-default ease-in-out;
+
+    @include mixins.on-desktop {
+      width: 64px;
+      height: 64px;
+    }
+
+    &:hover {
+      background-color: var.$color-elements;
+    }
+
+    &--favorites::after,
+    &--cart::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      transform-origin: center;
+      transform: scaleX(0);
+      display: block;
+      width: 100%;
+      height: 3px;
+      background-color: var.$color-primary;
+      transition: transform var.$transition-default ease-in-out;
+    }
+
+    &--active::after {
+      transform: scaleX(1);
+    }
+
+    &--theme,
+    &--search {
+      border: none;
+      color: var.$color-primary;
+    }
+
+    &--search {
+      display: flex;
+    }
+
+    &--favorites,
+    &--cart {
+      display: none;
+
+      @include mixins.on-tablet {
+        display: flex;
+      }
+    }
+
+    &--menu {
+      border: none;
+      text-decoration: none;
+      background-image: none;
+
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: currentcolor;
+        transition:
+          opacity var.$transition-default ease,
+          transform var.$transition-default ease;
+      }
+
+      &::before {
+        opacity: 1;
+        mask: url('/src/assets/icons/Menu.svg') center / 16px no-repeat;
+      }
+
+      &::after {
+        transform: rotate(-90deg);
+        opacity: 0;
+        mask: url('/src/assets/icons/Close.svg') center / 16px no-repeat;
+      }
+
+      @include mixins.on-tablet {
+        display: none;
+      }
+
+      &-open {
+        &::before {
+          transform: rotate(90deg);
+          opacity: 0;
+        }
+
+        &::after {
+          transform: rotate(0deg);
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
